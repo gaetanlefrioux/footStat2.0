@@ -1,6 +1,7 @@
 import numpy as np
 import sys
 import os
+from datetime import datetime
 
 ''' Class for loading and cleaning datas '''
 class DataLoader:
@@ -15,7 +16,8 @@ class DataLoader:
 
 	def getAvailableSeasons(self, competition):
 		if(competition not in self.availableCompetitions):
-			return None
+			raise Exception("The competition %s is not available" % competition)
+			sys.exit()
 		else:
 			return os.listdir(self.directory+competition)
 
@@ -31,9 +33,19 @@ class DataLoader:
 				names=True,
 				dtype=None,
 				missing_values=np.nan,
-				usecols=usecols
+				usecols=usecols,
+				converters = {"Date": self.parseDate},
+				encoding = 'utf-8'
 			)
 			return data
-		except:
-			e = sys.exc_info()
+		except Exception as e:
 			print "error while loading season %s of competition %s : \n %s" % (season, competition, e)
+
+	def parseDate(self, d):
+		try:
+			if(len(d) == 8):
+				return datetime.strptime(d, '%d/%m/%y')
+			elif(len(d) == 10):
+				return datetime.strptime(d, '%d/%m/%Y')	
+		except Exception as e:
+			print("Error while parsing date: %s" %e)
