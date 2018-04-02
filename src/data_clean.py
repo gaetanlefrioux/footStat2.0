@@ -1,10 +1,15 @@
 import os
+import check_consistency as cs
+import data_loader as dl
+import numpy as np
 
 ''' Cleaning those .csv files '''
 ''' Truncate too long lines '''
 ''' Remove empty lines '''
 ''' Clean cells content '''
 ''' Write the new content in the tmp/ directory to avoid loosing file content if an error occur '''
+
+loader = dl.DataLoader()
 
 ''' Clean sell content '''
 def stripAll(line):
@@ -63,5 +68,14 @@ def createCleanTmp():
 			newFile.close()			
 			currentFile.close()
 
-removeTmpFileContent()
-createCleanTmp()
+''' Order by date the files that aren't '''
+def orderByDate(loader):
+	failFiles = cs.get_date_summary(loader)
+	for failFile in failFiles:
+		fileInfos = failFile.split('/')
+		data = loader.load(fileInfos[0], fileInfos[1])
+		newData = np.sort(data, axis=0, order="Date")
+		# format the date like in other files
+		for i in range(newData.size):
+			newData[i]["Date"] = newData[i]["Date"].strftime("%d/%m/%y")
+		np.savetxt("../data/"+fileInfos[0]+'/'+fileInfos[1], newData, delimiter=",", encoding="utf-8", fmt='%s')

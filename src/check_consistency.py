@@ -1,5 +1,4 @@
 import data_loader as dl
-
 ''' Check datas consistency '''
 
 loader = dl.DataLoader()
@@ -38,14 +37,14 @@ def get_nmatch_summary(loader):
 ''' we need the file name to check if year is valid '''
 def check_date_consistency(data, filename):
 	if str(data[0]["Date"].year) not in filename:
-		print('Error in 1st line of file %s' % filename)
+		#print('Error in 1st line of file %s' % filename)
 		return False
 	for i in range(1, data.size):
 		if str(data[i]["Date"].year) not in filename:
-			print('Error in line %d of file %s False year' % (i, filename))
+			#print('Error in line %d of file %s False year' % (i, filename))
 			return False
 		if data[i-1]["Date"] > data[i]["Date"]:
-			print('Error in line %d of file %s False day' % (i, filename))
+			#print('Error in line %d of file %s False day' % (i, filename))
 			return False
 	return True
 
@@ -58,9 +57,9 @@ def get_date_summary(loader):
 			data = loader.load(competition, season)
 			date_consistency = check_date_consistency(data, filename)
 			if date_consistency == False:
-				fails.append([
-					filename,
-				])
+				fails.append(filename)
 	return fails
 
+''' 2017-2018 files will fail the number of matches check since the season isn't ended yet '''
 print(get_date_summary(loader))
+print(get_nmatch_summary(loader))
