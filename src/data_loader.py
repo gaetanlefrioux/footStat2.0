@@ -21,11 +21,11 @@ class DataLoader:
 		else:
 			return os.listdir(self.directory+competition)
 
-	def load(self, competition, season, colums=[0, 9]):
+	def load(self, competition, season, colums='all'):
 		if colums == 'all':
 			usecols = None
 		else:
-			usecols = np.arange(colums[0], colums[1])
+			usecols = colums
 		try:
 			data = np.genfromtxt(
 				self.directory+competition+"/"+season, 

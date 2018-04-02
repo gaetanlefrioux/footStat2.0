@@ -24,7 +24,7 @@ def get_nmatch_summary(loader):
 	for competition in loader.availableCompetitions:
 		for season in loader.getAvailableSeasons(competition):
 			filename = competition+"/"+season
-			data = loader.load(competition, season, 'all')
+			data = loader.load(competition, season)
 			nmatch_consistency = check_nmatch_consistency(data)
 			if nmatch_consistency == False:
 				print('Debug pour le fichier %s/%s\n'%(competition, season))
@@ -55,7 +55,7 @@ def get_date_summary(loader):
 	for competition in loader.availableCompetitions:
 		for season in loader.getAvailableSeasons(competition):
 			filename = competition+"/"+season
-			data = loader.load(competition, season, 'all')
+			data = loader.load(competition, season)
 			date_consistency = check_date_consistency(data, filename)
 			if date_consistency == False:
 				fails.append([
@@ -64,5 +64,3 @@ def get_date_summary(loader):
 	return fails
 
 print(get_date_summary(loader))
-
-
