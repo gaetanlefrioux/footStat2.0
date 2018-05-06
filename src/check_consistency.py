@@ -61,5 +61,5 @@ def get_date_summary(loader):
 	return fails
 
 ''' 2017-2018 files will fail the number of matches check since the season isn't ended yet '''
-print(get_date_summary(loader))
-print(get_nmatch_summary(loader))
+#print(get_date_summary(loader))
+#print(get_nmatch_summary(loader))

@@ -28,8 +28,8 @@ class DataLoader:
 			usecols = colums
 		try:
 			data = np.genfromtxt(
-				self.directory+competition+"/"+season, 
-				delimiter=self.delimiter, 
+				self.directory+competition+"/"+season,
+				delimiter=self.delimiter,
 				names=True,
 				dtype=None,
 				missing_values=np.nan,
@@ -41,11 +41,38 @@ class DataLoader:
 		except Exception as e:
 			print "error while loading season %s of competition %s : \n %s" % (season, competition, e)
 
+	def loadStandAloneFile(self, path):
+		try:
+			data = np.genfromtxt(
+				path,
+				delimiter=self.delimiter,
+				names=True,
+				dtype=None,
+				missing_values=np.nan,
+				usecols=None,
+				converters = {"Date": self.parseDate},
+				encoding = 'utf-8'
+			)
+			return data
+		except Exception as e:
+			print "error while loading file %s : \n %s" % (path, e)
+
 	def parseDate(self, d):
 		try:
 			if(len(d) == 8):
 				return datetime.strptime(d, '%d/%m/%y')
 			elif(len(d) == 10):
-				return datetime.strptime(d, '%d/%m/%Y')	
+				return datetime.strptime(d, '%d/%m/%Y')
 		except Exception as e:
 			print("Error while parsing date: %s" %e)
+
+	def write(self, path, data):
+			np.savetxt(
+				path,
+				data,
+				delimiter=",",
+				header=','.join(data.dtype.names),
+				comments='',
+				encoding="utf-8",
+				fmt='%s'
+			)
