@@ -67,12 +67,12 @@ class DataLoader:
 			print("Error while parsing date: %s" %e)
 
 	def write(self, path, data):
-			np.savetxt(
-				path,
-				data,
-				delimiter=",",
-				header=','.join(data.dtype.names),
-				comments='',
-				encoding="utf-8",
-				fmt='%s'
-			)
+		np.savetxt(
+			path,
+			data,
+			delimiter=",",
+			header=','.join(data.dtype.names),
+			comments='',
+			encoding="utf-8",
+			fmt='%s'
+		)
