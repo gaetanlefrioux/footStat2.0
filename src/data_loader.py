@@ -21,7 +21,7 @@ class DataLoader:
 		else:
 			return os.listdir(self.directory+competition)
 
-	def load(self, competition, season, colums='all'):
+	def load(self, competition, season, colums='all', dtype=None):
 		if colums == 'all':
 			usecols = None
 		else:
@@ -31,7 +31,7 @@ class DataLoader:
 				self.directory+competition+"/"+season,
 				delimiter=self.delimiter,
 				names=True,
-				dtype=None,
+				dtype=dtype,
 				missing_values=np.nan,
 				usecols=usecols,
 				converters = {"Date": self.parseDate},
@@ -40,6 +40,21 @@ class DataLoader:
 			return data
 		except Exception as e:
 			print "error while loading season %s of competition %s : \n %s" % (season, competition, e)
+
+	# Load and concatenate all the competitions and seasons given
+	def loadFiles(self, competitions, seasons='all', columns=range(9)):
+		data = None
+		for c in competitions:
+			# If no seasons are given we take all of the seasons available
+			if seasons == 'all':
+				seasons = self.getAvailableSeasons(c)
+			for s in seasons:
+				if data is not None:
+					seasonData = self.load(c, s, columns, np.dtype(data.dtype))
+					data = np.concatenate((data, seasonData), axis=0)
+				else:
+					data = self.load(c, s, columns)
+		return data
 
 	def loadStandAloneFile(self, path):
 		try:
