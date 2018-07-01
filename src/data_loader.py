@@ -39,7 +39,7 @@ class DataLoader:
 			)
 			return data
 		except Exception as e:
-			print "error while loading season %s of competition %s : \n %s" % (season, competition, e)
+			print("error while loading season "+season+" of competition "+competition+" : \n "+e)
 
 	# Load and concatenate all the competitions and seasons given
 	def loadFiles(self, competitions, seasons='all', columns=range(9)):
@@ -70,7 +70,7 @@ class DataLoader:
 			)
 			return data
 		except Exception as e:
-			print "error while loading file %s : \n %s" % (path, e)
+			print("error while loading file "+path+" : \n "+e)
 
 	def parseDate(self, d):
 		try:
