@@ -1,4 +1,5 @@
 import data_loader as dl
+import numpy as np
 ''' Check datas consistency '''
 
 loader = dl.DataLoader()
@@ -59,6 +60,35 @@ def get_date_summary(loader):
 			if date_consistency == False:
 				fails.append(filename)
 	return fails
+
+''' Get the commons complete attributes from files '''
+def getCommonAttributes(competition, years=False):
+	attributes = {}
+	if years == False:
+		years = loader.getAvailableSeasons(competition)
+	for y in years:
+		data = loader.load(competition, y)
+		for att in data.dtype.names:
+			isComplete = True
+			i = 0
+			while i < data.size and isComplete:
+				isComplete = data[i][att] != np.nan
+				i += 1
+			if att not in attributes.keys():
+				attributes[att] = []
+			attributes[att] += [isComplete]
+	commonAttributes = []
+	for att in attributes.keys():
+		if len(attributes[att]) == len(years):
+			ok = True
+			for b in attributes[att]:
+				ok = ok and b
+				if ok == False:
+					break
+			if ok == True:
+				commonAttributes += [att]
+	return commonAttributes
+
 
 ''' 2017-2018 files will fail the number of matches check since the season isn't ended yet '''
 #print(get_date_summary(loader))
